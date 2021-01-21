@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Product;
 
 class ProductController extends Controller
 {
@@ -13,7 +14,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $data = [
+            'products' => Product::all()
+        ];
+        return view('products.index',$data);
     }
 
     /**
@@ -34,7 +38,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $new_product = new Product();
+        $new_product->fill($data);
+        $new_product->save();
+
+        return redirect()->route('products.index');
     }
 
     /**
@@ -43,9 +52,15 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Product $product)
     {
-        //
+        if($product){
+            $data = [
+                'product' => $product
+            ];
+            return view('products.show', $data);
+        }
+        abort(404);
     }
 
     /**
